@@ -7,7 +7,7 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     friends = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True)
-
+    description = models.TextField(max_length=500, blank=True, null=True)
     def qty_asked(self):
         """
         return how many question you asked
