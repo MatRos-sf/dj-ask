@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    friends = models.ForeignKey("self", on_delete=models.CASCADE, blank=True, null=True)
 
     def qty_asked(self):
         """
