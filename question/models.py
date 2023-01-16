@@ -29,6 +29,10 @@ class Question(models.Model):
     def __str__(self):
 
         return f"Q{self.id}: {self.who_ask()} to {self.receiver.user.username}"
+
+    def get_absolute_url(self):
+        from django.urls import reverse
+        return reverse('question:detail', kwargs={'pk' : self.pk})
 class Answer(models.Model):
 
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
