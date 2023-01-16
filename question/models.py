@@ -5,7 +5,10 @@ from django.utils.translation import gettext_lazy as _
 
 from user.models import Profile
 class Question(models.Model):
-
+    STATUS_CHOICES = (
+        (1, _('Yes')),
+        (2, _('No'))
+    )
     question = models.TextField(max_length=500)
     sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="sender")
     receiver = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="questions")
@@ -13,9 +16,15 @@ class Question(models.Model):
     anonymous = models.BooleanField(default=False, blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
+    is_answer = models.SmallIntegerField(choices=STATUS_CHOICES, default=2)
     def who_ask(self):
         if self.anonymous:  return "anonymous"
         else:               return self.sender.user.username
+
+    def answered(self):
+        self.is_answer = 1
+    def answered_default(self):
+        self.is_answer=2
 
     def __str__(self):
 
@@ -37,9 +46,11 @@ class Answer(models.Model):
             raise ValidationError(_("My error: You don't have permission "))
         super(Answer, self).clean()
 
-    # def save(
-    #     self, force_insert=False, force_update=False, using=None, update_fields=None
-    # ):
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        self.clean()
+        super(Answer,self).save(force_insert, force_update, using, update_fields)
     #     # add some information about error
     #     if self.user.id == self.question.receiver.id:
     #         id_q = self.question.id

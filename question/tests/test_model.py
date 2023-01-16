@@ -44,7 +44,7 @@ class CreateTest(TestCase):
         self.assertEqual(q.question, q_u2.question)
         self.assertEqual(q.created, q_u2.created)
 
-    def test_answered_model(self):
+    def test_answered_model_valid(self):
         q = Question.objects.create(
             question="How you doing?",
             sender=self.user1,
@@ -56,11 +56,28 @@ class CreateTest(TestCase):
 
         self.assertEqual(Answer.objects.count(), 1)
 
+        # try:
+        #     # Answer.objects.create(question=q, answer="OK, and you?",
+        #     #                       user=self.user1)
+        #     Answer.objects.create(question=q, answer="OK, and you?",
+        #                           user=self.user2)
+        # except ValidationError:
+        #     pass
+        # self.assertEqual(Answer.objects.count(), 1)
+    def test_answered_model_invalid(self):
+
+        q = Question.objects.create(
+            question="How you doing?",
+            sender=self.user1,
+            receiver= self.user2
+        )
+
         try:
-            # Answer.objects.create(question=q, answer="OK, and you?",
-            #                       user=self.user1)
+            Answer.objects.create(question=q, answer="OK, and you?",
+                              user=self.user2)
             Answer.objects.create(question=q, answer="OK, and you?",
                                   user=self.user2)
-        except ValidationError:
-            pass
+        except ValidationError as v:
+            ...
+
         self.assertEqual(Answer.objects.count(), 1)
