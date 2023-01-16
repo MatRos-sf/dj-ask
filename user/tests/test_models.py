@@ -48,15 +48,35 @@ class SimpleTest(TestCase):
         self.assertEqual(Answer.objects.count(), 1)
         # check
         self.assertEqual(
-            self.user2.profile.qty_asked(), 0
+            self.user2.profile.qty_asked, 0
         )
         self.assertEqual(
-            self.user1.profile.qty_asked(), 2
+            self.user1.profile.qty_asked, 2
         )
         self.assertEqual(
-            self.user1.profile.qty_answered(), 0
+            self.user1.profile.qty_answered, 0
         )
         self.assertEqual(
-            self.user2.profile.qty_answered(), 1
+            self.user2.profile.qty_answered, 1
         )
 
+    def test_add_friends(self):
+        # create random friends
+        name = lambda x: f"name{x}"
+        password = '1234qwesdfxcvF'
+        new_user = []
+        for u in range(8):
+            new_user.append(
+                User.objects.create_user(username=name(u), password=password)
+            )
+
+        for u in new_user:
+            if u.pk % 3 == 0:
+                self.user1.profile.friends.add(u.profile)
+                self.user1.profile.save()
+            else:
+                self.user2.profile.friends.add(u.profile)
+                self.user2.profile.save()
+
+        self.assertEqual(self.user1.profile.qty_friends, 3)
+        self.assertEqual(self.user2.profile.qty_friends, 5)

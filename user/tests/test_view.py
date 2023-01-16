@@ -6,14 +6,12 @@ class UserTest(TestCase):
     def setUp(self) -> None:
         User.objects.create_user(username='test1', password='Dr3ssCode')
         self.client = Client()
-    # def test_login(self):
-    #     c = Client()
-    #     response = c.post('/login/', {
-    #         'username': 'test1',
-    #         'password': 'Dr3ssCode'
-    #     })
-    #     self.assertEqual(response.status_code, 200)
+
     def test_home(self):
         self.client.login(username='test1', password='Dr3ssCode')
         response = self.client.get('')
-        print(response.content)
+        context = response.context.dicts[-1]
+        context_rando = context.get('rando', None)
+        context_friends = context.get('rando_friends', None)
+
+        self.assertIsNotNone(context_rando,context_friends)

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% for profile in rando %}
+    <p>{{ profile.user.username }}</p>
+
+{% empty %}
+    <h1>Empty rando </h1>
+{% endfor %}
+
+{% for profile in rando_friends %}
+    {{ profile.username }}
+{% empty %}
+    <h1>Empty friends</h1>
+{% endfor %}
+</body>
+</html>

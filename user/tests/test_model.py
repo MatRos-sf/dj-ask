@@ -20,3 +20,4 @@ class CreateTest(TestCase):
         self.assertEqual(User.objects.count(), Profile.objects.count())
         self.assertEqual(qty+1, Profile.objects.count())
 
+
