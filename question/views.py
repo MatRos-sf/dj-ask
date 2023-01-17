@@ -52,6 +52,7 @@ class DetailQuestionView(DetailView):
 
 
 # ANSWER
+@login_required
 def create_answer(request, pk):
     object = get_object_or_404(Question, pk=pk)
     form = AnswerForms()
@@ -71,3 +72,17 @@ def create_answer(request, pk):
         'form': form,
         'object': object
     })
+
+@login_required
+def del_answer(request, pk):
+    # delete question only user who create it
+    objects = get_object_or_404(Answer, pk=pk)
+    if objects.user.pk == request.user.pk:
+        name_obj = objects.__str__()
+        objects.delete()
+        print(f'{name_obj}-- was deleted!')
+        # message
+        return redirect('home')
+    else:
+        print("You don't have permission")
+        return HttpResponse("<h1>You don't have permission</h1>")
