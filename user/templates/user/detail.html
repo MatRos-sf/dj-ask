@@ -6,9 +6,36 @@
 </head>
 <body>
     <h1>{{ object.user.username }}</h1>
-    <p>{{ object.description }}</p>
-    <p>{{ object.qty_friends }} Friends</p>
-    <p>ASK: {{ object.qty_asked }}</p>
-    <p>ANSWERED: {{ object.qty_answered }}</p>
+
+    <div>
+        <p>Stats:</p>
+        <p>{{ object.qty_asked }} user question asked </p>
+        <p>{{ object.qty_answered }} user question answered</p>
+        <p> {{ object.qty_friends }} friends</p>
+    </div>
+
+    <div>
+        <h1>
+            Ask:
+                <form method="post">{% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" value="Save">
+                </form>
+        </h1>
+    </div>
+
+    <div>
+        <q>{{ object.description }}</q>
+    </div>
+
+    <h1>Question:</h1>
+    <div>
+        {% for q in questions %}
+            <h2>{{ q.question }}</h2>
+            <h4>{{ q.get_answer }}</h4>
+            <p>Asked: {{ q.who_ask }}</p>
+        {% endfor %}
+
+    </div>
 </body>
 </html>

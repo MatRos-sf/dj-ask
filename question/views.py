@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
-from django.views.generic import DetailView
+from django.views.generic import DetailView, CreateView
 from django.contrib.auth.decorators import login_required
 
-from .models import Question
-from .forms import QuestionForms, QuickQuestionForms
+from .models import Question, Answer
+from .forms import QuestionForms, QuickQuestionForms, AnswerForms
 
 @login_required
 def create_question(request):
@@ -49,3 +49,25 @@ class DetailQuestionView(DetailView):
     #     form = QuickQuestionForms(request.POST)
     #     if form.is_valid():
     #         print(self.pk_url_kwarg)
+
+
+# ANSWER
+def create_answer(request, pk):
+    object = get_object_or_404(Question, pk=pk)
+    form = AnswerForms()
+    if request.method == 'POST':
+        form = AnswerForms(request.POST)
+        if form.is_valid():
+            obj_form = form.save(commit=False)
+            obj_form.question = object
+            obj_form.user = request.user.profile
+
+            obj_form.save()
+            return redirect('home')
+
+
+
+    return render(request, "question/create.html", {
+        'form': form,
+        'object': object
+    })
