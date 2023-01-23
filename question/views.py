@@ -86,3 +86,37 @@ def del_answer(request, pk):
     else:
         print("You don't have permission")
         return HttpResponse("<h1>You don't have permission</h1>")
+
+
+
+# random function
+def random_question(request, name):
+
+    if name.lower() == 'rando':
+        from user.models import Profile
+        import json
+        from random import choice
+
+        object = Profile.objects.exclude(pk=request.user.profile.pk).order_by('?')[0]
+        with open("random_question.data", "r") as f:
+            qs = json.load(f)
+            q = choice(qs)
+
+        Question.objects.create(
+            question = q,
+            sender = request.user.profile,
+            receiver = object
+        )
+        print('rando ask')
+        return redirect('home')
+
+    elif name.lower() == 'friends':
+        user_rando_friends = request.user.profile.friends.all().order_by('?')[0]
+        Question.objects.create(
+            question = "What's up?",
+            sender = request.user.profile,
+            receiver = user_rando_friends
+        )
+        print('randoo friends')
+        return redirect('home')
+
