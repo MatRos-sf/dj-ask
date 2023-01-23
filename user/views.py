@@ -4,8 +4,19 @@ from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .models import Profile
+from .forms import UserRegisterForm
+
 from question.forms import QuickQuestionForms
 from question.models import Question
+
+def register(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = UserRegisterForm()
+    return render(request, "user/register.html", {'form': form})
 
 @login_required
 def home(request):

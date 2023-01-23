@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    friends = models.ManyToManyField("self", blank=True, null=True)
+    friends = models.ManyToManyField("self", blank=True)
     description = models.TextField(max_length=500, blank=True, null=True)
 
     @property
