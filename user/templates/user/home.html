@@ -1,22 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'user/base.html' %}
 
-{% for profile in rando %}
-    <p>{{ profile.user.username }}</p>
-
-{% empty %}
-    <h1>Empty rando </h1>
-{% endfor %}
-
-{% for profile in rando_friends %}
-    {{ profile.username }}
-{% empty %}
-    <h1>Empty friends</h1>
-{% endfor %}
-</body>
-</html>
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="text-center">Welcome to your home page</h1>
+        <hr>
+        <h3>Random objects</h3>
+        <ul>
+          {% for object in rando %}
+            <li class="list-group-item">{{ object.user.username }}</li>
+          {% endfor %}
+        </ul>
+        <hr>
+        <h3>Random friends</h3>
+        <ul>
+          {% for friend in rando_friends %}
+            <li>{{ friend.user.username }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endblock %}
