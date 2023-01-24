@@ -9,6 +9,9 @@ class SimpleTest(TestCase):
         # create users
         self.user1 = User.objects.create_user(username="user1", password='1234qwesdfxcvF')
         self.user2 = User.objects.create_user(username="user2", password='1234qwesdfxcvF')
+        self.user3 = User.objects.create_user(username="user3", password='1234qwesdfxcvF')
+        self.user4 = User.objects.create_user(username="user4", password='1234qwesdfxcvF')
+
 
         self.payload = {
             "question": "test?",
@@ -20,6 +23,16 @@ class SimpleTest(TestCase):
             "sender": self.user1.profile,
             "receiver": self.user2.profile
         }
+
+    def test_quantity_profile(self):
+
+        qty_profile = Profile.objects.count()
+        self.assertEqual(qty_profile, 4)
+
+    def test_simple_check_profiles(self):
+
+        check_id = Profile.objects.get(id=1).id == self.user1.id and Profile.objects.last().id == self.user4.id
+        self.assertTrue(check_id)
 
     def test_ask_question_user1(self):
         q = Question.objects.create(
@@ -80,3 +93,4 @@ class SimpleTest(TestCase):
 
         self.assertEqual(self.user1.profile.qty_friends, 3)
         self.assertEqual(self.user2.profile.qty_friends, 5)
+        self.assertEqual(self.user4.profile.qty_friends, 0)

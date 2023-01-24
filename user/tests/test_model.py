@@ -2,6 +2,7 @@ from django.test import TestCase
 
 from django.contrib.auth.models import User
 from user.models import Profile
+
 class CreateTest(TestCase):
     def setUp(self) -> None:
         User.objects.create_user(username="test", password='1234qwesdfxcvF')
@@ -9,6 +10,10 @@ class CreateTest(TestCase):
     def test_signal_profile(self):
 
         self.assertEqual(Profile.objects.count(), 1)
+        user = Profile.objects.first()
+        base_info = user.id == 1 and user.user.username == "test"
+
+        self.assertTrue(base_info)
 
     def test_create_random_qty_user(self):
         from random import randint
