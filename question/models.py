@@ -4,6 +4,16 @@ from django.contrib import messages
 from django.utils.translation import gettext_lazy as _
 
 from user.models import Profile
+
+class Notification(models.Model):
+    sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='n_sender')
+    recipient = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='n_recipient')
+    action = models.CharField(max_length=300)
+
+    created = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+
+
 class Question(models.Model):
     STATUS_CHOICES = (
         (1, _('Yes')),
@@ -52,7 +62,9 @@ class Answer(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True, null=True)
 
-
+    def notification_info(self, user):
+        info = f"'{user} answered for your question: {self.question.question[:50]}...'"
+        return info
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
@@ -65,4 +77,13 @@ class Answer(models.Model):
             raise ValidationError("Only the receiver of the question can answer it.")
 
         super(Answer,self).save(force_insert, force_update, using, update_fields)
+        # notification
+        sender = self.question.sender
+        notification = Notification(
+            recipient = sender,
+            sender = self.user,
+            action = self.notification_info(self.user)
+        )
+        notification.save()
+
 

@@ -3,9 +3,11 @@ from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.views.generic import DetailView, CreateView
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ValidationError
+
 
 from .models import Question, Answer
-from .forms import QuestionForms, QuickQuestionForms, AnswerForms
+from .forms import QuestionForms, FriendQuestionForm, AnswerForms
 
 from user.models import Profile
 
@@ -69,6 +71,8 @@ def edit_question(request, pk):
 def create_answer(request, pk):
     object = get_object_or_404(Question, pk=pk)
     form = AnswerForms()
+    if not object.can_edit():
+        return render(request, "question/info.html", {'info': 'This question already has an answer.'})
     if request.method == 'POST':
         form = AnswerForms(request.POST)
         if form.is_valid():
@@ -76,12 +80,15 @@ def create_answer(request, pk):
             obj_form.question = object
             obj_form.user = request.user.profile
 
-            obj_form.save()
-            return redirect('home')
+            try:
+                obj_form.save()
 
+            except ValidationError as e:
+                messages.error(request, e.messages[0])
+                return redirect('home')
+            return redirect(object)
 
-
-    return render(request, "question/create.html", {
+    return render(request, "question/create-answer.html", {
         'form': form,
         'object': object
     })
@@ -93,20 +100,19 @@ def del_answer(request, pk):
     if objects.user.pk == request.user.pk:
         name_obj = objects.__str__()
         objects.delete()
-        print(f'{name_obj}-- was deleted!')
-        # message
+        messages.success(request, f'{name_obj}-- was deleted!')
         return redirect('home')
     else:
-        print("You don't have permission")
-        return HttpResponse("<h1>You don't have permission</h1>")
+        messages.error(request, "You don't have permission")
+        return redirect('home')
 
 
 
 # random function
-def random_question(request, name):
+@login_required
+def random_question(request, name='rando'):
 
     if name.lower() == 'rando':
-        from user.models import Profile
         import json
         from random import choice
 
@@ -120,16 +126,33 @@ def random_question(request, name):
             sender = request.user.profile,
             receiver = object
         )
-        print('rando ask')
+        messages.success(request,f"You asked random question to {object} ")
         return redirect('home')
 
     elif name.lower() == 'friends':
+
+        # check user has friends
+        if request.user.profile.qty_friends == 0:
+            return render(request, "question/info.html", {'info': "You don't have any friends "})
+
         user_rando_friends = request.user.profile.friends.all().order_by('?')[0]
         Question.objects.create(
             question = "What's up?",
             sender = request.user.profile,
             receiver = user_rando_friends
         )
-        print('randoo friends')
         return redirect('home')
 
+@login_required
+def sample(request):
+    form = FriendQuestionForm(request.POST or None, user=request.user)
+    if request.method == 'POST':
+        form = FriendQuestionForm(request.POST)
+        if form.is_valid():
+            object = form.save(commit=False)
+            object.sender = request.user.profile
+
+            object.save()
+            return redirect(object)
+
+    return render(request, "question/sample.html", {'form': form})

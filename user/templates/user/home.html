@@ -6,13 +6,22 @@
       <div class="col-md-12">
         <h1 class="text-center">Welcome to your home page</h1>
         <hr>
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
         <h3>Random objects</h3>
         <ul>
           {% for object in rando %}
-            <a href="{{ object.get_absolute_url }}">
-              <li class="list-group-item">{{ object.user.username }}</li>
-            </a>
-            <a class="btn btn-sm btn-primary btn-block text-uppercase" href="{% url 'question:create' object.pk %}">Add Question</a>
+            <li class="list-group-item">
+            <a href="{{ object.get_absolute_url }}">{{ object.user.username }}</a>
+              <a href="{% url 'question:random' 'rando' %}" type="button" class="btn btn-outline-primary">Random ask</a>
+
+              </li>
           {% endfor %}
         </ul>
         <hr>
