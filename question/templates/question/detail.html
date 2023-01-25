@@ -1,18 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'user/base.html' %}
+{% block title %} Register {% endblock %}
 
-<p>{{ object.question }}</p>
-<p>Date: {{ object.created|date }}</p>
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+          <div class="card-body">
+            <h5 class="card-title text-center">{{ object.question }}</h5>
+              {{ object.created }}
+            <hr>
+              {% if object.can_edit %}
+                <h6> Ednit</h6>
+              {% else %}
+                <h6>{{ object.get_answer }}</h6>
+              {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
 
-<form method="post">{% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save">
-</form>
-<p></p>
-</body>
-</html>
+

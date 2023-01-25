@@ -12,6 +12,7 @@
             <a href="{{ object.get_absolute_url }}">
               <li class="list-group-item">{{ object.user.username }}</li>
             </a>
+            <a class="btn btn-sm btn-primary btn-block text-uppercase" href="{% url 'question:create' object.pk %}">Add Question</a>
           {% endfor %}
         </ul>
         <hr>

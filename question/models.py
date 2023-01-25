@@ -43,6 +43,8 @@ class Question(models.Model):
         return not self.answer_set.exists()
 
 
+
+
 class Answer(models.Model):
 
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
