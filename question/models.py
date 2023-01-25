@@ -38,6 +38,11 @@ class Question(models.Model):
         if self.is_answer == 2:
             return None
         return self.answer_set.first().answer
+
+    def can_edit(self):
+        return not self.answer_set.exists()
+
+
 class Answer(models.Model):
 
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -45,31 +50,17 @@ class Answer(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True, null=True)
 
-    # def clean(self):
-    #
-    #     super(Answer, self).clean()
+
 
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        # self.clean()
-        if self.user.id == self.question.receiver.id:
-            id_q = self.question.id
-            get_obj = Question.objects.get(id=id_q)
-            if get_obj.answer_set.count() > 0:
-                raise ValidationError(_("My error: You answered for this question"), code='invalid')
-        else:
-            raise ValidationError(_("My error: You don't have permission "), code='invalid')
+        if self.question.answer_set.exists():
+            raise ValidationError("This question already has an answer.")
+        if self.user.id == self.question.sender.id:
+            raise ValidationError("The sender of the question can't answer to his own question.")
+        if self.user.user.id != self.question.receiver.id:
+            raise ValidationError("Only the receiver of the question can answer it.")
+
         super(Answer,self).save(force_insert, force_update, using, update_fields)
-    #     # add some information about error
-    #     if self.user.id == self.question.receiver.id:
-    #         id_q = self.question.id
-    #         get_obj = Question.objects.get(id=id_q)
-    #         if get_obj.answer_set.count() == 0:
-    #             super(Answer,self).save(force_insert, force_update, using, update_fields)
-    #         else:
-    #             raise ValidationError('My error: You answered for this question!')
-    #     else:
-    #         raise ValidationError("My error: Wrong receiver")
-        # raise ValidationError("You don't want permission ")
-        # # it's must show any error
+
