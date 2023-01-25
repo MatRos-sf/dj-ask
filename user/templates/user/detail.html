@@ -1,41 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h1>{{ object.user.username }}</h1>
+{% extends 'user/base.html' %}
 
-    <div>
-        <p>Stats:</p>
-        <p>{{ object.qty_asked }} user question asked </p>
-        <p>{{ object.qty_answered }} user question answered</p>
-        <p> {{ object.qty_friends }} friends</p>
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="text-center">{{ object.user.username }}'s Profile</h1>
+        <hr>
+        <p>Description: {{ object.description }}</p>
+        <hr>
+        <h3>Answered questions:</h3>
+        <ul>
+          {% for question in questions %}
+            <li class="list-group-item">{{ question.question }}</li>
+          {% endfor %}
+        </ul>
+        <hr>
+          {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+          <h3>Ask a quick question:</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" class="btn btn-primary" value="Send">
+        </form>
+      </div>
     </div>
-
-    <div>
-        <h1>
-            Ask:
-                <form method="post">{% csrf_token %}
-                    {{ form.as_p }}
-                    <input type="submit" value="Save">
-                </form>
-        </h1>
-    </div>
-
-    <div>
-        <q>{{ object.description }}</q>
-    </div>
-
-    <h1>Question:</h1>
-    <div>
-        {% for q in questions %}
-            <h2>{{ q.question }}</h2>
-            <h4>{{ q.get_answer }}</h4>
-            <p>Asked: {{ q.who_ask }}</p>
-        {% endfor %}
-
-    </div>
-</body>
-</html>
+  </div>
+{% endblock %}

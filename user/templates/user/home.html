@@ -9,7 +9,9 @@
         <h3>Random objects</h3>
         <ul>
           {% for object in rando %}
-            <li class="list-group-item">{{ object.user.username }}</li>
+            <a href="{{ object.get_absolute_url }}">
+              <li class="list-group-item">{{ object.user.username }}</li>
+            </a>
           {% endfor %}
         </ul>
         <hr>

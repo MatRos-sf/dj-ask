@@ -6,7 +6,6 @@ from django.urls import reverse
 
 
 
-
 class UserTest(TestCase):
     def setUp(self) -> None:
         User.objects.create_user(username='test1', password='Dr3ssCode')
@@ -86,3 +85,34 @@ class HomeViewTest(TestCase):
         # it's not working
         # self.assertContains(response, 'rando')
         # self.assertContains(response, 'rando_friends')
+
+
+class ProfileDetailViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser', password='12345')
+        self.profile = self.user.profile
+
+    def test_view_url_exists_at_desired_location(self):
+        self.client.login(username='testuser', password='12345')
+        response = self.client.get('/profile/1/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        self.client.login(username='testuser', password='12345')
+        response = self.client.get(reverse('detail', args=[self.profile.id]))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        self.client.login(username='testuser', password='12345')
+        response = self.client.get(reverse('detail', args=[self.profile.id]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'user/detail.html')
+
+    def test_view_shows_user_data(self):
+        self.client.login(username='testuser', password='12345')
+        response = self.client.get(reverse('detail', args=[self.profile.id]))
+        self.assertContains(response, 'testuser')
+        self.assertContains(response, 'Answered questions:')
+        self.assertContains(response, 'Ask a quick question:')
+
