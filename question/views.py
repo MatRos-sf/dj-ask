@@ -126,7 +126,7 @@ def random_question(request, name='rando'):
             sender = request.user.profile,
             receiver = object
         )
-        messages.success(request,f"You asked random question to {object} ")
+        messages.success(request,f"You asked random question to {object}: {q}")
         return redirect('home')
 
     elif name.lower() == 'friends':
@@ -136,12 +136,32 @@ def random_question(request, name='rando'):
             return render(request, "question/info.html", {'info': "You don't have any friends "})
 
         user_rando_friends = request.user.profile.friends.all().order_by('?')[0]
+        q = "What's up?"
         Question.objects.create(
-            question = "What's up?",
+            question = q,
             sender = request.user.profile,
             receiver = user_rando_friends
         )
+        messages.success(request,f"You asked random question to {user_rando_friends}: {q}")
         return redirect('home')
+
+@login_required
+def random_question_with_pk(request, pk):
+    import json
+    from random import choice
+
+    object = Profile.objects.get(id=pk)
+    with open("random_question.data", "r") as f:
+        qs = json.load(f)
+        q = choice(qs)
+
+    Question.objects.create(
+        question=q,
+        sender=request.user.profile,
+        receiver=object
+    )
+    messages.success(request, f"You asked random question to {object}: {q}")
+    return redirect('home')
 
 @login_required
 def sample(request):

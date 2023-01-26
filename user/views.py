@@ -7,7 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Profile
 from .forms import UserRegisterForm
 
-from question.forms import QuickQuestionForms
+from question.forms import QuickQuestionForms, FriendQuestionForm
 from question.models import Question
 
 def register(request):
@@ -25,13 +25,14 @@ def register(request):
 def home(request):
 
     rando_objects = Profile.objects.exclude(pk=request.user.id).order_by('?')[:5]
-
     objects = Profile.objects.get(id=request.user.id)
     rando_friends_objects = objects.friends.order_by('?')[:5]
 
+
+
     context = {
         "rando": rando_objects,
-        "rando_friends": rando_friends_objects
+        "rando_friends": rando_friends_objects,
     }
 
     return render(request, 'user/home.html', context)

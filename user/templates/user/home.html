@@ -1,36 +1,51 @@
 {% extends 'user/base.html' %}
-
+{% block title %}Home{% endblock %}
 {% block content %}
+
   <div class="container">
     <div class="row">
       <div class="col-md-12">
-        <h1 class="text-center">Welcome to your home page</h1>
-        <hr>
+        <h1 class="text-center">Welcome to your home page!</h1>
         {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li class="alert alert-{{ message.tags }}">{{ message }}</li>
-                {% endfor %}
-            </ul>
+          <ul class="messages">
+            {% for message in messages %}
+                <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+            {% endfor %}
+          </ul>
         {% endif %}
-
-        <h3>Random objects</h3>
-        <ul>
-          {% for object in rando %}
-            <li class="list-group-item">
-            <a href="{{ object.get_absolute_url }}">{{ object.user.username }}</a>
-              <a href="{% url 'question:random' 'rando' %}" type="button" class="btn btn-outline-primary">Random ask</a>
-
-              </li>
-          {% endfor %}
-        </ul>
         <hr>
-        <h3>Random friends</h3>
-        <ul>
-          {% for friend in rando_friends %}
-            <li>{{ friend.user.username }}</li>
+        <h3 class="text-center">Random users</h3>
+        <div class="row">
+          {% for object in rando %}
+            <div class="col-sm-6 mb-3 mb-sm-0">
+            <div class="card text-center">
+              <div class="card-body">
+                <h3 class="card-title" > <a href="{{ object.get_absolute_url }}">
+                            {{ object.user.username }} </a></h3>
+                <a href="{% url 'question:random-pk' object.user.pk %}" class="btn btn-primary">Random Ask</a>
+              </div>
+            </div>
+          </div>
           {% endfor %}
-        </ul>
+        </div>
+        <!-- Random friends--->
+        <hr>
+        <h3 class="text-center">Random friends</h3>
+        <div class="row">
+          {% for friend in rando_friends %}
+            <div class="col-sm-6 mb-3 mb-sm-0">
+            <div class="card text-center">
+              <div class="card-body">
+                <h3 class="card-title" > <a href="{{ object.get_absolute_url }}">
+                            {{ friend.user.username }} </a></h3>
+                <a href="{% url 'question:random-pk' friend.user.pk %}" class="btn btn-primary">Random Ask</a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <hr>
+
       </div>
     </div>
   </div>
