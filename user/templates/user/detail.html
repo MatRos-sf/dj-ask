@@ -1,19 +1,17 @@
 {% extends 'user/base.html' %}
-
+{% block title %} {{ object.user }}{% endblock %}
 {% block content %}
   <div class="container">
     <div class="row">
       <div class="col-md-12">
         <h1 class="text-center">{{ object.user.username }}'s Profile</h1>
         <hr>
-        <p>Description: {{ object.description }}</p>
-        <hr>
-        <h3>Answered questions:</h3>
-        <ul>
-          {% for question in questions %}
-            <li class="list-group-item">{{ question.question }}</li>
-          {% endfor %}
-        </ul>
+        <h3>Information</h3>
+
+
+          {% if odbject.description %}
+            <p>Description: {{ object.description }}</p>
+          {% endif %}
         <hr>
           {% if messages %}
             <ul class="messages">
@@ -21,13 +19,34 @@
                     <li class="alert alert-{{ message.tags }}">{{ message }}</li>
                 {% endfor %}
             </ul>
-        {% endif %}
-          <h3>Ask a quick question:</h3>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" class="btn btn-primary" value="Send">
-        </form>
+            {% endif %}
+          <!-- ask question -->
+          {% if object.user != request.user %}
+            <div class="text-center">
+                <h3>Ask a quick question:</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                      <label for="{{ form.question.id_for_label }}" class="form-label">Question</label>
+                        {{ form.question }}
+                        <label for="{{ form.anonymous.id_for_label }}" class="form-label">Annonym</label>
+                        {{ form.anonymous }}
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Send">
+                </form>
+            </div>
+
+          {% endif %}
+
+          <hr>
+        <h3>Answered questions:</h3>
+        <ul>
+          {% for question in questions %}
+            <li class="list-group-item">{{ question.question }}</li>
+          {% endfor %}
+        </ul>
+        <hr>
+
       </div>
     </div>
   </div>

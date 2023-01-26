@@ -9,10 +9,12 @@ class QuestionForms(forms.ModelForm):
 
 class QuickQuestionForms(forms.Form):
 
-    question = forms.CharField()
-    anonymous = forms.BooleanField(required=False)
+    question = forms.CharField(widget=forms.Textarea(attrs={'rows':3, 'class':'form-control'}))
+    anonymous = forms.BooleanField(required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+
     class Meta:
         fields = ['question', 'anonymous']
+
 
 class AnswerForms(forms.ModelForm):
 
