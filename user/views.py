@@ -48,7 +48,6 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         context['questions'] = question_with_answer
         context['form'] = QuickQuestionForms
 
-        print(context)
         return context
 
     def post(self, request, pk):
@@ -69,4 +68,8 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
                     messages.error(request, "You can't ask question to yourself!")
                     return redirect('detail', pk=pk)
 
-
+            else:
+                for field in form:
+                    for error in field.errors:
+                        messages.error(request, field.errors)
+                return redirect('detail', pk=pk)

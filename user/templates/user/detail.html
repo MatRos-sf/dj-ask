@@ -7,7 +7,21 @@
         <h1 class="text-center">{{ object.user.username }}'s Profile</h1>
         <hr>
         <h3>Information</h3>
+        <div class="row justify-content-center">
+            <div class="col-4">
+                <h5 class="text-center">Send question: </h5>
+                <p class="text-center">{{ object.qty_asked }}</p>
+                <h5 class="text-center">Answered question: </h5>
+                <p class="text-center">{{ object.qty_answered }}</p>
+            </div>
+            <div class="col-4">
+                <h5 class="text-center">Friends: </h5>
+                <p class="text-center">{{ object.qty_friends }}</p>
 
+                <h5 class="text-center">Created: </h5>
+                <p class="text-center">{{ object.user.date_joined|date:"M d, Y"  }}</p>
+            </div>
+          </div>
 
           {% if odbject.description %}
             <p>Description: {{ object.description }}</p>
@@ -39,10 +53,19 @@
           {% endif %}
 
           <hr>
-        <h3>Answered questions:</h3>
+          <h1>Questions</h1>
+
         <ul>
           {% for question in questions %}
-            <li class="list-group-item">{{ question.question }}</li>
+            <li class="list-group-item list-group-item-action">
+              <h5 class="text-center fw-bold">{{ question.question }}</h5>
+                <p class="text-center">By: {{ question.sender }} - {{ question.created|date:"M d, Y"}}</p>
+                <hr>
+              {% if question.answer_set %}
+                <p class="text-center">Answer: {{ question.get_answer }}</p>
+              {% endif %}
+            </li>
+            <p></p>
           {% endfor %}
         </ul>
         <hr>
