@@ -181,9 +181,26 @@ def sample(request):
 
 @login_required
 def show_notification(requset):
+
     pk = requset.user.pk
     object = get_object_or_404(Profile, pk=pk)
     noti = object.n_recipient.all()
 
     return render(requset, "question/notification.html", {'object': noti})
+
+
+def change_status_read_notification(request):
+
+    #get pk user
+    pk_user = request.user.pk
+    object = get_object_or_404(Profile, pk=pk_user)
+
+    notification = object.n_recipient.all()
+    for n in notification:
+        obj = n
+        obj.read = True
+        obj.save()
+
+    return redirect('home')
+
 

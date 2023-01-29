@@ -13,6 +13,9 @@ class Notification(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     read = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ['-created']
+
 
 class Question(models.Model):
     STATUS_CHOICES = (

@@ -4,7 +4,9 @@ from django.contrib.auth import views as auth_views
 from .views import (
     create_question, DetailQuestionView, del_question,
     create_answer, del_answer, random_question, edit_question, sample,
-    random_question_with_pk, show_notification
+    random_question_with_pk,
+    #notification
+    show_notification, change_status_read_notification
 )
 
 app_name='question'
@@ -26,5 +28,7 @@ urlpatterns = [
     path('sample/', sample, name='sample'),
 
     # notification
-    path('notification/', show_notification, name='notification')
+    path('notification/', show_notification, name='notification'),
+    path('notification/done/', change_status_read_notification, name='notification-done')
+
 ]
