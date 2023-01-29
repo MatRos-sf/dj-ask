@@ -1,3 +1,4 @@
+{% load my_tags %}
 <!DOCTYPE html>
 <html>
   <head>
@@ -23,7 +24,10 @@
             <a class="nav-link" href="{% url 'detail' user.pk %}">Profile</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Notification</a>
+            <a class="nav-link" href="#">Notification
+                <span class="badge text-bg-secondary">{% qty_notification user.pk %}</span>
+
+            </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Top</a>

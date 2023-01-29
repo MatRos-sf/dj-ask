@@ -4,7 +4,7 @@ from django.contrib.auth import views as auth_views
 from .views import (
     create_question, DetailQuestionView, del_question,
     create_answer, del_answer, random_question, edit_question, sample,
-    random_question_with_pk
+    random_question_with_pk, show_notification
 )
 
 app_name='question'
@@ -23,5 +23,8 @@ urlpatterns = [
     #answer random
     path('random/<str:name>/', random_question, name='random'),
     path('random-pk/<int:pk>/', random_question_with_pk, name='random-pk'),
-    path('sample/', sample, name='sample')
+    path('sample/', sample, name='sample'),
+
+    # notification
+    path('notification/', show_notification, name='notification')
 ]

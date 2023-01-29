@@ -62,7 +62,7 @@
                 <p class="text-center">By: {{ question.sender }} - {{ question.created|date:"M d, Y"}}</p>
                 <hr>
               {% if question.answer_set %}
-                <p class="text-center">Answer: {{ question.get_answer }}</p>
+                <p class="text-center"> {{ question.get_answer }}</p>
               {% endif %}
             </li>
             <p></p>

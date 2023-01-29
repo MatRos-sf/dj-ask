@@ -176,3 +176,14 @@ def sample(request):
             return redirect(object)
 
     return render(request, "question/sample.html", {'form': form})
+
+#Notification
+
+@login_required
+def show_notification(requset):
+    pk = requset.user.pk
+    object = get_object_or_404(Profile, pk=pk)
+    noti = object.n_recipient.all()
+
+    return render(requset, "question/notification.html", {'object': noti})
+
