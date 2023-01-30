@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.views.generic import DetailView, CreateView
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
+from django.core.paginator import Paginator
 
 
 from .models import Question, Answer
@@ -185,6 +186,11 @@ def show_notification(requset):
     pk = requset.user.pk
     object = get_object_or_404(Profile, pk=pk)
     noti = object.n_recipient.all()
+
+    #set pagination
+    paginator = Paginator(noti, 10)
+    page = requset.GET.get('page')
+    noti = paginator.get_page(page)
 
     return render(requset, "question/notification.html", {'object': noti})
 

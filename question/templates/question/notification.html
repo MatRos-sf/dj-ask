@@ -12,6 +12,23 @@
               <h5 class="text-center fw-bold">{{ obj.action }}</h5>
             </li>
             {% endfor %}
+            <div class="pagination">
+              <span class="step-links">
+                  {% if object.has_previous %}
+                      <a href="?page=1">&laquo; first</a>
+                      <a href="?page={{ object.previous_page_number }}">previous</a>
+                  {% endif %}
+
+                  <span class="current-page">
+                      {{ object.number }}
+                  </span>
+
+                  {% if object.has_next %}
+                      <a href="?page={{ object.next_page_number }}">next</a>
+                      <a href="?page={{ object.paginator.num_pages }}">last &raquo;</a>
+                  {% endif %}
+              </span>
+            </div>
             <a class="btn btn-lg btn-primary btn-block text-uppercase" href="{% url 'question:notification-done' %}">I've seen all.</a>
 
 
