@@ -181,18 +181,18 @@ def sample(request):
 #Notification
 
 @login_required
-def show_notification(requset):
+def show_notification(request):
 
-    pk = requset.user.pk
+    pk = request.user.pk
     object = get_object_or_404(Profile, pk=pk)
     noti = object.n_recipient.all()
 
     #set pagination
-    paginator = Paginator(noti, 10)
-    page = requset.GET.get('page')
+    paginator = Paginator(noti, 5)
+    page = request.GET.get('page')
     noti = paginator.get_page(page)
 
-    return render(requset, "question/notification.html", {'object': noti})
+    return render(request, "question/notification.html", {'object': noti})
 
 
 def change_status_read_notification(request):

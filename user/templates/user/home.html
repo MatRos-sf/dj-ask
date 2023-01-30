@@ -1,21 +1,6 @@
 {% extends 'user/base.html' %}
+{% load is_liked %}
 {% block title %}Home{% endblock %}
-
-{% block left-sidebar %}
-
-    <ul class="nav nav-pills flex-column">
-      <li class="nav-item">
-        <a class="nav-link active" href="#">Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Profile</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Messages</a>
-      </li>
-    </ul>
-
-{% endblock %}
 
 {% block content %}
   <div class="container">
@@ -30,6 +15,32 @@
           </ul>
         {% endif %}
         <hr>
+        {% for question in friends_question %}
+          <li class="list-group-item list-group-item-action">
+              <h5 class="text-center fw-bold">{{ question.question }}</h5>
+                <p class="text-center">By: {{ question.sender }} - {{ question.created|date:"M d, Y"}}</p>
+                {% if question.answer_set %}
+                    <p class="text-center"> {{ question.get_answer }}</p>
+                {% endif %}
+
+                <hr>
+
+              {% if question.answer_set %}
+                <p class="text-center"> {{ question.get_answer }}</p>
+              {% endif %}
+                <p class="text-center">
+                    {% is_liked question user.profile as liked %}
+                      {% if liked %}
+                        <a href="{% url 'like:like' question.id %}" class="btn btn-danger">Unlike</a>
+                        <span class="badge badge-light">{{ question.like_set.count }} Likes</span>
+                    {% else %}
+                        <a href="{% url 'like:like' question.id %}" class="btn btn-primary">Like</a>
+                    {% endif %}
+
+                  </p>
+            </li>
+        {% endfor %}
+
         <h3 class="text-center">Random users</h3>
         <div class="row">
           {% for object in rando %}

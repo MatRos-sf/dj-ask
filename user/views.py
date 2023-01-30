@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
+
 
 from .models import Profile
 from .forms import UserRegisterForm
@@ -24,6 +26,12 @@ def register(request):
 @login_required
 def home(request):
 
+    # last 10 friends posts
+    user = request.user.profile
+    friends = user.friends.all()
+    friends_question = Question.objects.filter(receiver__in=friends).filter(is_answer=1)
+    friends_question = friends_question.order_by('?')[:10]
+
     rando_objects = Profile.objects.exclude(pk=request.user.id).order_by('?')[:5]
     objects = Profile.objects.get(id=request.user.id)
     rando_friends_objects = objects.friends.order_by('?')[:5]
@@ -33,6 +41,7 @@ def home(request):
     context = {
         "rando": rando_objects,
         "rando_friends": rando_friends_objects,
+        'friends_question': friends_question
     }
 
     return render(request, 'user/home.html', context)
