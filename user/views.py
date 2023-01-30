@@ -47,6 +47,8 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         question_with_answer = self.object.questions.filter(is_answer=1).order_by('-created')
         context['questions'] = question_with_answer
         context['form'] = QuickQuestionForms
+        context['user'] = self.request.user.profile
+
 
         return context
 

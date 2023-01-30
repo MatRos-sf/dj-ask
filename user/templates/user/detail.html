@@ -63,17 +63,25 @@
                 <p class="text-center">By: {{ question.sender }} - {{ question.created|date:"M d, Y"}}</p>
                 {% if question.answer_set %}
                     <p class="text-center"> {{ question.get_answer }}</p>
-                  {% endif %}
-                  <p class="text-center">
-                      <a href="{% url 'like:like' question.id %}" class="btn btn-danger">Unlike</a>
-                      <span class="badge badge-light">{{ question.like_set.count }} Likes</span>
-                  </p>
+                {% endif %}
+
                 <hr>
 
               {% if question.answer_set %}
                 <p class="text-center"> {{ question.get_answer }}</p>
               {% endif %}
+                <p class="text-center">
+                    {% is_liked question user as liked %}
+                      {% if liked %}
+                        <a href="{% url 'like:like' question.id %}" class="btn btn-danger">Unlike</a>
+                        <span class="badge badge-light">{{ question.like_set.count }} Likes</span>
+                    {% else %}
+                        <a href="{% url 'like:like' question.id %}" class="btn btn-primary">Like</a>
+                    {% endif %}
+
+                  </p>
             </li>
+
 
           {% endfor %}
         </ul>
