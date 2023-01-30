@@ -55,6 +55,9 @@ class Question(models.Model):
     def can_edit(self):
         return not self.answer_set.exists()
 
+    def total_likes(self):
+        return self.like_set.count()
+
 
 
 

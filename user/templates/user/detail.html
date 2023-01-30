@@ -1,4 +1,5 @@
 {% extends 'user/base.html' %}
+{% load is_liked %}
 {% block title %} {{ object.user }}{% endblock %}
 {% block content %}
   <div class="container">
@@ -60,12 +61,20 @@
             <li class="list-group-item list-group-item-action">
               <h5 class="text-center fw-bold">{{ question.question }}</h5>
                 <p class="text-center">By: {{ question.sender }} - {{ question.created|date:"M d, Y"}}</p>
+                {% if question.answer_set %}
+                    <p class="text-center"> {{ question.get_answer }}</p>
+                  {% endif %}
+                  <p class="text-center">
+                      <a href="{% url 'like:like' question.id %}" class="btn btn-danger">Unlike</a>
+                      <span class="badge badge-light">{{ question.like_set.count }} Likes</span>
+                  </p>
                 <hr>
+
               {% if question.answer_set %}
                 <p class="text-center"> {{ question.get_answer }}</p>
               {% endif %}
             </li>
-            <p></p>
+
           {% endfor %}
         </ul>
         <hr>
